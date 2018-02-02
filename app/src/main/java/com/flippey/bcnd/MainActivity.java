@@ -1,26 +1,38 @@
 package com.flippey.bcnd;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.flippey.bcnd.Orm.OrmLiteDbUtils;
 import com.flippey.bcnd.bean.LoginBean;
+import com.flippey.bcnd.bean.User;
 import com.itheima.retrofitutils.ItheimaHttp;
 import com.itheima.retrofitutils.Request;
 import com.itheima.retrofitutils.listener.HttpResponseListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
+    @BindView(R.id.recyclerView)
+    RecyclerView mRcv;
     private TextView mTv;
+    private MainActivity mInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        mInstance = MainActivity.this;
+        initView();
         mTv = (TextView) findViewById(R.id.text);
         findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
                 getNetData();
             }
         });
+    }
+
+    private void initView() {
+        mRcv.setLayoutManager(new LinearLayoutManager(mInstance));
+
+        User user = new User(1, "test", 0f, 0f, 1, 123, "ss");
+        OrmLiteDbUtils.getInstance().addUser(user);
     }
 
     private void getNetData() {
@@ -52,4 +71,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 }
